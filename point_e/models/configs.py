@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import torch
 import torch.nn as nn
@@ -114,20 +114,24 @@ MODEL_CONFIGS = {
 }
 
 
-def model_from_config(config: Dict[str, Any], device: torch.device) -> nn.Module:
+def model_from_config(
+    config: Dict[str, Any],
+    device: torch.device,
+    cache_dir: Optional[str] = None,
+) -> nn.Module:
     config = config.copy()
     name = config.pop("name")
     if name == "PointDiffusionTransformer":
         return PointDiffusionTransformer(device=device, dtype=torch.float32, **config)
     elif name == "CLIPImagePointDiffusionTransformer":
-        return CLIPImagePointDiffusionTransformer(device=device, dtype=torch.float32, **config)
+        return CLIPImagePointDiffusionTransformer(device=device, dtype=torch.float32, cache_dir=cache_dir **config)
     elif name == "CLIPImageGridPointDiffusionTransformer":
-        return CLIPImageGridPointDiffusionTransformer(device=device, dtype=torch.float32, **config)
+        return CLIPImageGridPointDiffusionTransformer(device=device, dtype=torch.float32, cache_dir=cache_dir, **config)
     elif name == "UpsamplePointDiffusionTransformer":
         return UpsamplePointDiffusionTransformer(device=device, dtype=torch.float32, **config)
     elif name == "CLIPImageGridUpsamplePointDiffusionTransformer":
         return CLIPImageGridUpsamplePointDiffusionTransformer(
-            device=device, dtype=torch.float32, **config
+            device=device, dtype=torch.float32, cache_dir=cache_dir, **config
         )
     elif name == "CrossAttentionPointCloudSDFModel":
         return CrossAttentionPointCloudSDFModel(device=device, dtype=torch.float32, **config)
